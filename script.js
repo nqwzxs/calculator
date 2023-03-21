@@ -56,8 +56,7 @@ function useOperator(e) {
     isOperatorUsed = true;
     
     if (isEqualsUsed) {
-        firstNumber = +display.textContent;
-        result = null;
+        result = +display.textContent;
         isEqualsUsed = false;
         isNumberFirst = true;
     } else if (isOperatorUsed) {
@@ -71,15 +70,10 @@ function useOperator(e) {
         }
         isNumberFirst = true;
     }
-
-    console.log("used operator");
-    console.log(firstNumber);
-    console.log(secondNumber);
-    console.log(result);
 }
 
 function useEquals() {
-    if (isOperatorUsed && firstNumber || result) {
+    if (isOperatorUsed && (firstNumber || result)) {
         firstNumber = result ? result : firstNumber;
         secondNumber = +display.textContent;
         result = operate(firstNumber, secondNumber, operator);
@@ -89,11 +83,14 @@ function useEquals() {
         isEqualsUsed = true;
         isNumberFirst = true;
     }
+}
 
-    console.log("used equals");
-    console.log(firstNumber);
-    console.log(secondNumber);
-    console.log(result);
+function clearDisplay() {
+    display.textContent = "0";
+    isNumberFirst = true;
+    firstNumber = null;
+    isOperatorUsed = false;
+    isEqualsUsed = false;
 }
 
 numbers.forEach((number) => {
@@ -103,16 +100,8 @@ numbers.forEach((number) => {
 });
 
 operators.forEach((operator) => {
-    operator.addEventListener("click", useOperator)
+    operator.addEventListener("click", useOperator);
 });
 
-equals.addEventListener("click", useEquals)
-
-// if use operator
-// first = display, operator = button
-// if use operator with first again
-// do nothing
-// if use operator with second
-// second = display, operate, display = result, second = none, operator
-// if use operator with result
-// result = first, operator = button
+equals.addEventListener("click", useEquals);
+clear.addEventListener("click", clearDisplay);
