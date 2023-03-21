@@ -55,7 +55,8 @@ function useOperator(e) {
     operator = e.target.textContent;
     isOperatorUsed = true;
     
-    if (isEqualsUsed) {
+    if (display.textContent === "error!!11") {
+    } else if (isEqualsUsed) {
         result = +display.textContent;
         isEqualsUsed = false;
         isNumberFirst = true;
@@ -63,8 +64,14 @@ function useOperator(e) {
         if (result || firstNumber) {
             firstNumber = result ? result : firstNumber;
             secondNumber = +display.textContent;
-            result = operate(firstNumber, secondNumber, operator);
-            display.textContent = result;
+            
+            if (operator === "/" && secondNumber === 0) {
+                display.textContent = "error!!11";
+            } else {
+                result = operate(firstNumber, secondNumber, operator);
+                display.textContent = result;
+            }
+            
         } else {
             firstNumber = +display.textContent;
         }
@@ -76,8 +83,13 @@ function useEquals() {
     if (isOperatorUsed && (firstNumber || result)) {
         firstNumber = result ? result : firstNumber;
         secondNumber = +display.textContent;
-        result = operate(firstNumber, secondNumber, operator);
-        display.textContent = result;
+
+        if (operator === "/" && secondNumber === 0) {
+            display.textContent = "error!!11";
+        } else {
+            result = operate(firstNumber, secondNumber, operator);
+            display.textContent = result;
+        }
 
         isOperatorUsed = false;
         isEqualsUsed = true;
@@ -89,6 +101,7 @@ function clearDisplay() {
     display.textContent = "0";
     isNumberFirst = true;
     firstNumber = null;
+    result = null;
     isOperatorUsed = false;
     isEqualsUsed = false;
 }
