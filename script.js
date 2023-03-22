@@ -3,15 +3,12 @@ const operators = document.querySelectorAll(".operator");
 const equals = document.querySelector(".equals");
 const clear = document.querySelector(".clear");
 const display = document.querySelector("#display");
+const decimal = document.querySelector(".decimal");
 
-let firstNumber;
-let secondNumber;
-let operator;
-let result;
-
-let isNumberFirst = true;
-let isOperatorUsed = false;
-let isEqualsUsed = false;
+let displayValue = "";
+let firstNumber = "";
+let secondNumber = "";
+let operator = "";
 
 function add(a, b) {
     return a + b;
@@ -42,73 +39,57 @@ function operate(firstNumber, secondNumber, operator) {
     }
 }
 
-function updateDisplay(number) {
-    if (isNumberFirst) {
-        display.textContent = number;
-        isNumberFirst = false;        
-    } else {
-        display.textContent += number;
-    }
+function updateDisplay(value) {
+    display.textContent = value;
 }
 
 function useOperator(e) {
-    operator = e.target.textContent;
-    isOperatorUsed = true;
-    
-    if (display.textContent === "error!!11") {
-    } else if (isEqualsUsed) {
-        result = +display.textContent;
-        isEqualsUsed = false;
-        isNumberFirst = true;
-    } else if (isOperatorUsed) {
-        if (result || firstNumber) {
-            firstNumber = result ? result : firstNumber;
-            secondNumber = +display.textContent;
-            
-            if (operator === "/" && secondNumber === 0) {
-                display.textContent = "error!!11";
-            } else {
-                result = operate(firstNumber, secondNumber, operator);
-                display.textContent = result;
-            }
-            
-        } else {
-            firstNumber = +display.textContent;
-        }
-        isNumberFirst = true;
+    if (displayValue && firstNumber && operator) {
+        useEquals();
+        operator = e.target.textContent;
+    } else {
+        if (display.textContent === "0") firstNumber = "0";
+        if (!firstNumber) firstNumber = displayValue;
+        operator = e.target.textContent;
+        displayValue = "";
     }
 }
 
 function useEquals() {
-    if (isOperatorUsed && (firstNumber || result)) {
-        firstNumber = result ? result : firstNumber;
-        secondNumber = +display.textContent;
-
-        if (operator === "/" && secondNumber === 0) {
-            display.textContent = "error!!11";
-        } else {
-            result = operate(firstNumber, secondNumber, operator);
-            display.textContent = result;
-        }
-
-        isOperatorUsed = false;
-        isEqualsUsed = true;
-        isNumberFirst = true;
+    if (displayValue && firstNumber && operator) {
+        secondNumber = displayValue;
+        displayValue = operate(+firstNumber, +secondNumber, operator).toString();
+        updateDisplay(displayValue);
+        firstNumber = displayValue;
+        secondNumber = "";
+        displayValue = "";
+        operator = "";
     }
 }
 
 function clearDisplay() {
-    display.textContent = "0";
-    isNumberFirst = true;
-    firstNumber = null;
-    result = null;
-    isOperatorUsed = false;
-    isEqualsUsed = false;
+    updateDisplay("0");
+    displayValue = "";
+    firstNumber = "";
+    secondNumber = "";
+    operator = "";
+}
+
+function addDecimal() {
+    if (!display.textContent.includes(".")) {
+        display.textContent += ".";
+    }
 }
 
 numbers.forEach((number) => {
     number.addEventListener("click", (e) => {
-        updateDisplay(e.target.textContent);
+        displayValue += +e.target.textContent;
+        updateDisplay(displayValue);
+
+        console.log(firstNumber);
+        console.log(operator);
+        console.log(secondNumber);
+        console.log(displayValue);
     });
 });
 
@@ -118,3 +99,4 @@ operators.forEach((operator) => {
 
 equals.addEventListener("click", useEquals);
 clear.addEventListener("click", clearDisplay);
+decimal.addEventListener("click", addDecimal);
