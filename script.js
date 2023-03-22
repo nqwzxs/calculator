@@ -41,7 +41,7 @@ function operate(firstNumber, secondNumber, operator) {
 
 function displayOperator() {
     const operators = ["+", "-", "*", "/"]; 
-    if (operators.some(op => display.textContent.includes(op))) {
+    if (operators.some(operator => display.textContent.includes(operator))) {
         display.textContent = display.textContent.slice(0, -2);
     }
     display.textContent += ` ${operator}`;
@@ -52,6 +52,7 @@ function useOperator(e) {
         useEquals();
         operator = e.target.textContent;
     } else {
+        if (display.textContent === "ERROR!!1") return;
         if (display.textContent === "0") firstNumber = "0";
         if (!firstNumber) firstNumber = displayValue;
         operator = e.target.textContent;
@@ -62,9 +63,12 @@ function useOperator(e) {
 }
 
 function useEquals() {
-    if (displayValue && firstNumber && operator) {
+    if (displayValue === "0" && operator === "/") {
+        clearDisplay();
+        display.textContent = "ERROR!!1";
+    } else if (displayValue && firstNumber && operator) {
         secondNumber = displayValue;
-        displayValue = operate(+firstNumber, +secondNumber, operator).toString();
+        displayValue = (Math.round(operate(+firstNumber, +secondNumber, operator) * 100) / 100).toString();
         display.textContent = `= ${displayValue}`;
         firstNumber = displayValue;
         secondNumber = "";
@@ -83,17 +87,19 @@ function clearDisplay() {
 
 function addDecimal() {
     if (!displayValue.includes(".")) {
-        if (display.textContent = "0") {
+        if (display.textContent === "0") {
             displayValue = "0.";
         } else {
             displayValue += ".";
         }    
-        display.textContent += ".";
+        display.textContent = displayValue;
     }
 }
 
 numbers.forEach((number) => {
     number.addEventListener("click", (e) => {
+        if (displayValue.length > 8) return;
+            
         if (displayValue === "0") {
             displayValue = "0";
         } else {
