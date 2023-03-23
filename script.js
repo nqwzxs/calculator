@@ -4,6 +4,7 @@ const equals = document.querySelector(".equals");
 const clear = document.querySelector(".clear");
 const display = document.querySelector("#display");
 const decimal = document.querySelector(".decimal");
+const deleteNumber = document.querySelector(".delete-number");
 
 let displayValue = "";
 let firstNumber = "";
@@ -85,6 +86,16 @@ function clearDisplay() {
     operator = "";
 }
 
+function deleteLast() {
+    if (displayValue.length <= 1) {
+        displayValue = "";
+        display.textContent = "0";
+    } else {
+        displayValue = displayValue.slice(0, -1);
+        display.textContent = displayValue;
+    }
+}
+
 function addDecimal() {
     if (!displayValue.includes(".")) {
         if (display.textContent === "0") {
@@ -116,3 +127,4 @@ operators.forEach((operator) => {
 equals.addEventListener("click", useEquals);
 clear.addEventListener("click", clearDisplay);
 decimal.addEventListener("click", addDecimal);
+deleteNumber.addEventListener("click", deleteLast);
