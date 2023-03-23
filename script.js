@@ -5,6 +5,7 @@ const clear = document.querySelector(".clear");
 const display = document.querySelector("#display");
 const decimal = document.querySelector(".decimal");
 const deleteNumber = document.querySelector(".delete-number");
+const percent = document.querySelector(".percent");
 
 let displayValue = "";
 let firstNumber = "";
@@ -86,7 +87,7 @@ function clearDisplay() {
     operator = "";
 }
 
-function deleteLast() {
+function removeNumber() {
     if (displayValue.length <= 1) {
         displayValue = "";
         display.textContent = "0";
@@ -105,6 +106,11 @@ function addDecimal() {
         }    
         display.textContent = displayValue;
     }
+}
+
+function usePercent() {
+    displayValue = (+displayValue/100).toString();
+    display.textContent = displayValue;
 }
 
 numbers.forEach((number) => {
@@ -127,4 +133,5 @@ operators.forEach((operator) => {
 equals.addEventListener("click", useEquals);
 clear.addEventListener("click", clearDisplay);
 decimal.addEventListener("click", addDecimal);
-deleteNumber.addEventListener("click", deleteLast);
+deleteNumber.addEventListener("click", removeNumber);
+percent.addEventListener("click", usePercent);
